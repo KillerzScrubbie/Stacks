@@ -11,6 +11,9 @@ public class JsonReader : MonoBehaviour
 {
     [SerializeField] private string jsonUrl;
 
+    private Dictionary<string, List<BlockData>> allGradesData = new();
+    private List<string> gradeLevels = new();
+
     private void Start()
     {
         RequestData();
@@ -40,14 +43,9 @@ public class JsonReader : MonoBehaviour
         try
         {
             List<BlockData> result = JsonConvert.DeserializeObject<List<BlockData>>(jsonResponse);
-            Debug.Log($"Success: {webData.downloadHandler.text}");
+            // Debug.Log($"Success: {webData.downloadHandler.text}");
 
-            List<BlockData> sortedList = SortList(result);
-            
-            foreach ( BlockData block in sortedList )
-            {
-                Debug.Log(block.Id);
-            }
+            SplitList(result);
         }
         catch (Exception e)
         {
@@ -63,4 +61,24 @@ public class JsonReader : MonoBehaviour
 
         return sortedList.OrderBy(x => x.Domain).ThenBy(x => x.Cluster).ThenBy(x => x.StandardId).ToList();
     }
+
+    private void SplitList(List<BlockData> blockDatas)
+    {
+        List<BlockData> splitList = new();
+
+        splitList = blockDatas;
+
+        foreach (var blockData in splitList.GroupBy(x => x.Grade)) 
+        {
+            string gradeLevelName = blockData.Key;
+
+            allGradesData.Add(gradeLevelName, SortList(blockData.ToList())); // Split then sort
+            gradeLevels.Add(gradeLevelName);
+
+            Debug.Log($"Grade {blockData.Key}: {allGradesData[blockData.Key].Count}");
+        }
+    }
+
+    public List<string> GetGradeLevelNames() => gradeLevels;
+    public Dictionary<string, List<BlockData>> GetAllBlockData() => allGradesData;
 }
