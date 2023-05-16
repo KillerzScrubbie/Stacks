@@ -24,6 +24,9 @@ public class JengaBlockSpawner : MonoBehaviour
     private float zDimension = 0f;
     private float blockOffset = 0f;
 
+    private Quaternion normalRotation = Quaternion.identity;
+    private Quaternion perpendicularRotation = Quaternion.Euler(0f, 90f, 0f);
+
     private void Start()
     {
         GetDimensions();
@@ -36,21 +39,34 @@ public class JengaBlockSpawner : MonoBehaviour
         Collider collider = parentBlockPrefab.GetComponent<BoxCollider>();
         Vector3 colliderSize = collider.bounds.extents;
 
-        xDimension = colliderSize.x;
-        yDimension = colliderSize.y;
-        zDimension = colliderSize.z;
+        xDimension = colliderSize.x * 2;
+        yDimension = colliderSize.y * 2;
+        zDimension = colliderSize.z * 2;
 
         blockOffset = (zDimension - xDimension * 3) * 0.5f;
     }
 
     private void SpawnBlocks(List<string> gradeLevels, Dictionary<string, List<BlockData>> allBlocksData)
     {
-        Vector3 spawnLocation = firstSpawnLocation.position;
+        Vector3 startingSpawnLocation = firstSpawnLocation.position;
+        Vector3 spawnLocation = startingSpawnLocation;
+        Quaternion rotation = normalRotation;
+
+        GameObject objectToSpawn;
 
         foreach (string gradeLevel in gradeLevels)
         {
             List<BlockData> blockDatas = allBlocksData[gradeLevel];
-            GameObject objectToSpawn;
+
+            Vector3 firstBlockInOddRowLocation = startingSpawnLocation;
+            Vector3 firstBlockInEvenRowLocation = new(
+                startingSpawnLocation.x + xDimension + blockOffset,
+                startingSpawnLocation.y,
+                startingSpawnLocation.z - xDimension - blockOffset);
+
+            int blockCount = 0;
+            int rowCount = 0;
+            bool isOddRow = true;
 
             foreach (var blockData in blockDatas)
             {
@@ -61,11 +77,42 @@ public class JengaBlockSpawner : MonoBehaviour
                     _ => glassBlockPrefab,
                 };
 
-                Instantiate(objectToSpawn, spawnLocation, Quaternion.identity, parentObject);
-                spawnLocation.x += blockOffset + xDimension;
+                rowCount = (blockCount / 3) + 1;
+                isOddRow = rowCount % 2 != 0;
+
+                switch (isOddRow)
+                {
+                    case true: // Odd rows
+                        rotation = normalRotation;
+                        spawnLocation = GetSpawnLocation(firstBlockInOddRowLocation, rowCount, blockCount, isOddRow);
+                        break;
+                    case false: // Even rows
+                        rotation = perpendicularRotation;
+                        spawnLocation = GetSpawnLocation(firstBlockInEvenRowLocation, rowCount, blockCount, isOddRow);
+                        break;
+                }
+
+                JengaBlock spawnedBlock = Instantiate(objectToSpawn, parentObject).GetComponent<JengaBlock>();
+                
+                spawnedBlock.Setup(blockData, spawnLocation, rotation);
+                blockCount++;
             }
 
-            spawnLocation.x += towerOffset;
+            startingSpawnLocation.x += towerOffset;
+        }
+    }
+
+    private Vector3 GetSpawnLocation(Vector3 startRowPosition, int rowCount, int blockCount, bool isOddRow)
+    {
+        int blockCountInRow = blockCount % 3;
+        rowCount--;
+
+        switch (isOddRow) // Odd +x, Even +z
+        {
+            case true:
+                return new(startRowPosition.x + (blockOffset + xDimension) * blockCountInRow, startRowPosition.y + (yOffset + yDimension) * rowCount, startRowPosition.z);
+            case false:
+                return new(startRowPosition.x, startRowPosition.y + (yOffset + yDimension) * rowCount, startRowPosition.z + (blockOffset + xDimension) * blockCountInRow);
         }
     }
 

@@ -13,9 +13,10 @@ public class JengaBlock : MonoBehaviour
         TestStackReceiver.OnStackTested += HandleStackTested;
     }
 
-    public void Setup(BlockData blockData)
+    public void Setup(BlockData blockData, Vector3 spawnPostion, Quaternion spawnRotation)
     {
         this.blockData = blockData;
+        transform.SetLocalPositionAndRotation(spawnPostion, spawnRotation);
     }
 
     private void HandleStackTested()
