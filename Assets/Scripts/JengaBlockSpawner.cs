@@ -1,4 +1,4 @@
-using System.Collections;
+using TMPro;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,6 +15,7 @@ public class JengaBlockSpawner : MonoBehaviour
     [SerializeField] private GameObject glassBlockPrefab;
     [SerializeField] private GameObject woodBlockPrefab;
     [SerializeField] private GameObject stoneBlockPrefab;
+    [SerializeField] private Transform gradeText;
 
     [Space]
     [SerializeField] private Transform parentObject;
@@ -67,6 +68,12 @@ public class JengaBlockSpawner : MonoBehaviour
             int blockCount = 0;
             int rowCount = 0;
             bool isOddRow = true;
+
+            TextMeshPro gradeTextObject =  Instantiate(gradeText, new(
+                startingSpawnLocation.x + xDimension + blockOffset,
+                0.05f, -2.7f), Quaternion.Euler(90f, 0f, 0f)).GetComponent<TextMeshPro>();
+
+            gradeTextObject.text = gradeLevel;
 
             foreach (var blockData in blockDatas)
             {
