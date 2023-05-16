@@ -46,6 +46,8 @@ public class JengaBlock : MonoBehaviour
         transform.DORotate(originalRotation.eulerAngles, Random.Range(minTime, maxTime)).SetEase(Ease.InOutCubic);
     }
 
+    public BlockData GetBlockData() => blockData;
+
     private void OnDestroy()
     {
         DOTween.Kill(transform);

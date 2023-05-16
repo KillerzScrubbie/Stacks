@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6711974010226799843}
   - component: {fileID: 1272364946675233714}
   - component: {fileID: 1094171582018495915}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Text (TMP) (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -188,7 +188,7 @@ GameObject:
   - component: {fileID: 1601410907106429741}
   - component: {fileID: 8309742482472024932}
   - component: {fileID: 8754248732521137669}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: JengaBlock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -540,6 +540,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 1601410907106429741}
+  minTime: 1.5
+  maxTime: 3
 --- !u!33 &8754248732521137669
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -559,7 +561,7 @@ GameObject:
   - component: {fileID: 1794870437300662801}
   - component: {fileID: 535840832951662126}
   - component: {fileID: 6145029337230757980}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
