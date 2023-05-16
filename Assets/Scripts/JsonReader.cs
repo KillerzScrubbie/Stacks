@@ -1,6 +1,5 @@
 using Newtonsoft.Json;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,8 +10,10 @@ public class JsonReader : MonoBehaviour
 {
     [SerializeField] private string jsonUrl;
 
-    private Dictionary<string, List<BlockData>> allGradesData = new();
+    private Dictionary<string, List<BlockData>> allBlocksData = new();
     private List<string> gradeLevels = new();
+
+    public static event Action<List<string>, Dictionary<string, List<BlockData>>> OnDataFullyLoaded;
 
     private void Start()
     {
@@ -46,10 +47,12 @@ public class JsonReader : MonoBehaviour
             // Debug.Log($"Success: {webData.downloadHandler.text}");
 
             SplitList(result);
+
+            OnDataFullyLoaded?.Invoke(gradeLevels, allBlocksData);
         }
         catch (Exception e)
         {
-            Debug.LogError($"Could not parse response {jsonResponse}. {e.Message}");
+            Debug.LogError($"Could not parse response. {e.Message}");
         }
     }
 
@@ -72,13 +75,13 @@ public class JsonReader : MonoBehaviour
         {
             string gradeLevelName = blockData.Key;
 
-            allGradesData.Add(gradeLevelName, SortList(blockData.ToList())); // Split then sort
+            allBlocksData.Add(gradeLevelName, SortList(blockData.ToList())); // Split then sort
             gradeLevels.Add(gradeLevelName);
 
-            Debug.Log($"Grade {blockData.Key}: {allGradesData[blockData.Key].Count}");
+            // Debug.Log($"Grade {blockData.Key}: {allGradesData[blockData.Key].Count}");
         }
     }
 
     public List<string> GetGradeLevelNames() => gradeLevels;
-    public Dictionary<string, List<BlockData>> GetAllBlockData() => allGradesData;
+    public Dictionary<string, List<BlockData>> GetAllBlockData() => allBlocksData;
 }
