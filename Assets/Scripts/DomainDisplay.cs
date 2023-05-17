@@ -8,7 +8,6 @@ public class DomainDisplay : MonoBehaviour
     [SerializeField] private TextMeshProUGUI standardIdDescText;
     [SerializeField] private GameObject domainDisplayPanel;
 
-    // Start is called before the first frame update
     private void Start()
     {
         MouseClickRaycast.OnBlockClicked += DisplayText;

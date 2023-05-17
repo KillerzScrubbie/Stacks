@@ -1,6 +1,7 @@
 using TMPro;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class JengaBlockSpawner : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class JengaBlockSpawner : MonoBehaviour
     [SerializeField] private GameObject glassBlockPrefab;
     [SerializeField] private GameObject woodBlockPrefab;
     [SerializeField] private GameObject stoneBlockPrefab;
+    [SerializeField] private Transform cameraAnchor;
     [SerializeField] private Transform gradeText;
 
     [Space]
@@ -28,11 +30,13 @@ public class JengaBlockSpawner : MonoBehaviour
     private Quaternion normalRotation = Quaternion.identity;
     private Quaternion perpendicularRotation = Quaternion.Euler(0f, 90f, 0f);
 
+    public static event Action<Transform> OnCameraAnchorCreated;
+
     private void Start()
     {
         GetDimensions();
 
-        JsonReader.OnDataFullyLoaded += SpawnBlocks;
+        JsonReader.OnDataLoaded += SpawnBlocks;
     }
 
     private void GetDimensions()
@@ -69,9 +73,9 @@ public class JengaBlockSpawner : MonoBehaviour
             int rowCount = 0;
             bool isOddRow = true;
 
-            TextMeshPro gradeTextObject =  Instantiate(gradeText, new(
+            TextMeshPro gradeTextObject = Instantiate(gradeText, new(
                 startingSpawnLocation.x + xDimension + blockOffset,
-                0.05f, -2.7f), Quaternion.Euler(90f, 0f, 0f)).GetComponent<TextMeshPro>();
+                0.05f, -2.7f), Quaternion.Euler(90f, 0f, 0f), parentObject).GetComponent<TextMeshPro>();
 
             gradeTextObject.text = gradeLevel;
 
@@ -105,6 +109,9 @@ public class JengaBlockSpawner : MonoBehaviour
                 blockCount++;
             }
 
+            Transform cameraLookAtPosition = Instantiate(cameraAnchor, new(startingSpawnLocation.x + xDimension + blockOffset, (yOffset + yDimension) * rowCount * 0.5f, 0f), Quaternion.identity, parentObject);
+            OnCameraAnchorCreated?.Invoke(cameraLookAtPosition);
+
             startingSpawnLocation.x += towerOffset;
         }
     }
@@ -125,6 +132,6 @@ public class JengaBlockSpawner : MonoBehaviour
 
     private void OnDestroy()
     {
-        JsonReader.OnDataFullyLoaded -= SpawnBlocks;
+        JsonReader.OnDataLoaded -= SpawnBlocks;
     }
 }

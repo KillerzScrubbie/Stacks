@@ -14,9 +14,14 @@ public class CameraSystem : MonoBehaviour
     private Vector3 followOffset;
     private CinemachineTransposer cinemachineTransposer;
 
+    private List<Transform> cameraPositions = new();
+
     private void Start()
     {
         InputManager.OnMouseMoved += ReadMouseInput;
+        JengaBlockSpawner.OnCameraAnchorCreated += AddCameraAnchorPosition;
+        JsonReader.OnDataFullyLoaded += SetCameraDefaultPosition;
+
         cinemachineTransposer = cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>();
         followOffset = cinemachineTransposer.m_FollowOffset;
     }
@@ -34,10 +39,7 @@ public class CameraSystem : MonoBehaviour
         transform.eulerAngles += new Vector3(0f, rotateDirection * rotateSpeed * Time.deltaTime, 0f);
 
         followOffset.y = Mathf.Clamp(followOffset.y + camOffsetDirection * 0.1f, camPositionMinY, camPositionMaxY);
-        //cinemachineTransposer.m_FollowOffset += new Vector3(0f, 0.1f * rotateSpeed * Time.deltaTime * followOffset.y, 0f);
         cinemachineTransposer.m_FollowOffset = Vector3.Lerp(cinemachineTransposer.m_FollowOffset, followOffset, Time.deltaTime * rotateSpeed * 0.1f);
-        /*cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset = 
-            Vector3.Lerp(cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset, followOffset, Time.deltaTime * rotateSpeed * 0.1f);*/
     }
 
     private void ReadMouseInput(Vector2 delta)
@@ -45,8 +47,20 @@ public class CameraSystem : MonoBehaviour
         moveDirection = delta;
     }
 
+    private void AddCameraAnchorPosition(Transform lookAtTransform)
+    {
+        cameraPositions.Add(lookAtTransform);
+    }
+
+    private void SetCameraDefaultPosition()
+    {
+        transform.position = cameraPositions[0].position;
+    }
+
     private void OnDestroy()
     {
         InputManager.OnMouseMoved -= ReadMouseInput;
+        JengaBlockSpawner.OnCameraAnchorCreated -= AddCameraAnchorPosition;
+        JsonReader.OnDataFullyLoaded -= SetCameraDefaultPosition;
     }
 }

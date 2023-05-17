@@ -13,7 +13,8 @@ public class JsonReader : MonoBehaviour
     private Dictionary<string, List<BlockData>> allBlocksData = new();
     private List<string> gradeLevels = new();
 
-    public static event Action<List<string>, Dictionary<string, List<BlockData>>> OnDataFullyLoaded;
+    public static event Action<List<string>, Dictionary<string, List<BlockData>>> OnDataLoaded;
+    public static event Action OnDataFullyLoaded;
 
     private void Start()
     {
@@ -48,7 +49,9 @@ public class JsonReader : MonoBehaviour
 
             SplitList(result);
 
-            OnDataFullyLoaded?.Invoke(gradeLevels, allBlocksData);
+            OnDataLoaded?.Invoke(gradeLevels, allBlocksData);
+
+            OnDataFullyLoaded?.Invoke();
         }
         catch (Exception e)
         {
