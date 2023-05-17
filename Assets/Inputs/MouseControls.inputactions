@@ -1,0 +1,60 @@
+{
+    "name": "MouseControls",
+    "maps": [
+        {
+            "name": "Mouse",
+            "id": "cb75cb8e-5a1b-4cd9-824c-a6bcced39952",
+            "actions": [
+                {
+                    "name": "OrbitClick",
+                    "type": "Button",
+                    "id": "393260be-beaa-4cd2-acc1-5aa4d288b029",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "OrbitDelta",
+                    "type": "Value",
+                    "id": "c88b9bfd-b9a4-491d-8725-0d717110783c",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "a795cd55-8d4c-479b-801e-0834fa942b03",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Player",
+                    "action": "OrbitClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8498429f-ef0e-4d53-b50d-9bbabde23f8d",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Player",
+                    "action": "OrbitDelta",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "Player",
+            "bindingGroup": "Player",
+            "devices": []
+        }
+    ]
+}
