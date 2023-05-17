@@ -1,6 +1,5 @@
 using Cinemachine;
 using DG.Tweening;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,7 +14,9 @@ public class CameraSystem : MonoBehaviour
     private Vector3 followOffset;
     private CinemachineTransposer cinemachineTransposer;
 
-    private List<Transform> cameraPositions = new();
+    private readonly List<Transform> cameraPositions = new();
+
+    public static int StackNumber = 0;
 
     private void Start()
     {
@@ -62,6 +63,7 @@ public class CameraSystem : MonoBehaviour
     private void ChangeCameraView(int stackNumber)
     {
         transform.DOMove(cameraPositions[stackNumber].position, 0.5f).SetEase(Ease.OutCubic);
+        StackNumber = stackNumber;
     }
 
     private void OnDestroy()

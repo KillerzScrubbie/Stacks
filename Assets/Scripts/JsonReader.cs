@@ -83,11 +83,6 @@ public class JsonReader : MonoBehaviour
 
             allBlocksData.Add(gradeLevelName, SortList(blockData.ToList())); // Split then sort
             gradeLevels.Add(gradeLevelName);
-
-            // Debug.Log($"Grade {blockData.Key}: {allGradesData[blockData.Key].Count}");
         }
     }
-
-    public List<string> GetGradeLevelNames() => gradeLevels;
-    public Dictionary<string, List<BlockData>> GetAllBlockData() => allBlocksData;
 }

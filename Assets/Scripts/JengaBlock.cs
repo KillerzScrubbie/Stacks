@@ -10,6 +10,7 @@ public class JengaBlock : MonoBehaviour
     private BlockData blockData;
     private Vector3 originalPosition;
     private Quaternion originalRotation;
+    private int stackNumber = 0;
 
     private void Awake()
     {
@@ -22,28 +23,41 @@ public class JengaBlock : MonoBehaviour
         TestStackReceiver.OnStackReset += ResetPosition;
     }
 
-    public void Setup(BlockData blockData, Vector3 spawnPostion, Quaternion spawnRotation)
+    public void Setup(BlockData blockData, Vector3 spawnPostion, Quaternion spawnRotation, int stackNumber)
     {
         this.blockData = blockData;
         originalPosition = spawnPostion;
         originalRotation = spawnRotation;
+        this.stackNumber = stackNumber;
         transform.SetLocalPositionAndRotation(spawnPostion, spawnRotation);
     }
 
-    private void HandleStackTested()
+    private void HandleStackTested(int stack)
     {
+        if (stack != stackNumber) { return; }
+
         DOTween.Kill(transform);
         rb.useGravity = true;
         rb.isKinematic = false;
+
+        if (blockData.Mastery > 0) { return; } // Check for glass blocks
+
+        gameObject.SetActive(false);
     }
 
-    private void ResetPosition()
+    private void ResetPosition(int stack)
     {
+        if (stack != stackNumber) { return; }
+
         rb.useGravity = false;
         rb.isKinematic = true;
 
         transform.DOMove(originalPosition, Random.Range(minTime, maxTime)).SetEase(Ease.InOutCubic);
         transform.DORotate(originalRotation.eulerAngles, Random.Range(minTime, maxTime)).SetEase(Ease.InOutCubic);
+
+        if (blockData.Mastery > 0) { return; } // Check for glass blocks
+
+        gameObject.SetActive(true);
     }
 
     public BlockData GetBlockData() => blockData;

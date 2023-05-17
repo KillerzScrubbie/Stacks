@@ -3,16 +3,16 @@ using UnityEngine;
 
 public class TestStackReceiver : MonoBehaviour
 {
-    public static event Action OnStackTested;
-    public static event Action OnStackReset;
+    public static event Action<int> OnStackTested;
+    public static event Action<int> OnStackReset;
 
     public void TestStack()
     {
-        OnStackTested?.Invoke();
+        OnStackTested?.Invoke(CameraSystem.StackNumber);
     }
 
     public void ResetStack()
     {
-        OnStackReset?.Invoke();
+        OnStackReset?.Invoke(CameraSystem.StackNumber);
     }
 }

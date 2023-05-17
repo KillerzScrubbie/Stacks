@@ -107,7 +107,7 @@ public class JengaBlockSpawner : MonoBehaviour
 
                 JengaBlock spawnedBlock = Instantiate(objectToSpawn, parentObject).GetComponent<JengaBlock>();
                 
-                spawnedBlock.Setup(blockData, spawnLocation, rotation);
+                spawnedBlock.Setup(blockData, spawnLocation, rotation, stackCount);
                 blockCount++;
             }
 
