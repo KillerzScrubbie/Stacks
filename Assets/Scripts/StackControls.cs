@@ -4,15 +4,12 @@ using UnityEngine;
 
 public class StackControls : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] private GameObject stackControlButton;
+    [SerializeField] private Transform buttonGroupLayout;
 
-    // Update is called once per frame
-    void Update()
+    public void CreateButton(string gradeLevel, int stackNumber)
     {
-        
+        StackControlButton button = Instantiate(stackControlButton, buttonGroupLayout).GetComponent<StackControlButton>();
+        button.Setup(gradeLevel, stackNumber);
     }
 }

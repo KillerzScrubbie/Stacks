@@ -1,4 +1,5 @@
 using Cinemachine;
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,6 +22,7 @@ public class CameraSystem : MonoBehaviour
         InputManager.OnMouseMoved += ReadMouseInput;
         JengaBlockSpawner.OnCameraAnchorCreated += AddCameraAnchorPosition;
         JsonReader.OnDataFullyLoaded += SetCameraDefaultPosition;
+        StackControlButton.OnStackViewChanged += ChangeCameraView;
 
         cinemachineTransposer = cinemachineVirtualCamera.GetCinemachineComponent<CinemachineTransposer>();
         followOffset = cinemachineTransposer.m_FollowOffset;
@@ -54,7 +56,12 @@ public class CameraSystem : MonoBehaviour
 
     private void SetCameraDefaultPosition()
     {
-        transform.position = cameraPositions[0].position;
+        ChangeCameraView(0);
+    }
+
+    private void ChangeCameraView(int stackNumber)
+    {
+        transform.DOMove(cameraPositions[stackNumber].position, 0.5f).SetEase(Ease.OutCubic);
     }
 
     private void OnDestroy()
@@ -62,5 +69,6 @@ public class CameraSystem : MonoBehaviour
         InputManager.OnMouseMoved -= ReadMouseInput;
         JengaBlockSpawner.OnCameraAnchorCreated -= AddCameraAnchorPosition;
         JsonReader.OnDataFullyLoaded -= SetCameraDefaultPosition;
+        StackControlButton.OnStackViewChanged -= ChangeCameraView;
     }
 }

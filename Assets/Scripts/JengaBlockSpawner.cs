@@ -21,6 +21,7 @@ public class JengaBlockSpawner : MonoBehaviour
 
     [Space]
     [SerializeField] private Transform parentObject;
+    [SerializeField] private StackControls stackControls;
 
     private float xDimension = 0f;
     private float yDimension = 0f;
@@ -58,6 +59,7 @@ public class JengaBlockSpawner : MonoBehaviour
         Quaternion rotation = normalRotation;
 
         GameObject objectToSpawn;
+        int stackCount = 0;
 
         foreach (string gradeLevel in gradeLevels)
         {
@@ -111,7 +113,9 @@ public class JengaBlockSpawner : MonoBehaviour
 
             Transform cameraLookAtPosition = Instantiate(cameraAnchor, new(startingSpawnLocation.x + xDimension + blockOffset, (yOffset + yDimension) * rowCount * 0.5f, 0f), Quaternion.identity, parentObject);
             OnCameraAnchorCreated?.Invoke(cameraLookAtPosition);
+            stackControls.CreateButton(gradeLevel, stackCount);
 
+            stackCount++;
             startingSpawnLocation.x += towerOffset;
         }
     }
