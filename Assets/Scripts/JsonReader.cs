@@ -41,7 +41,7 @@ public class JsonReader : MonoBehaviour
         if (webData.result != UnityWebRequest.Result.Success)
         {
             OnDataFailedToLoad?.Invoke(webData.error);
-            Debug.LogError($"Failed: {webData.error}");
+            // Debug.LogError($"Failed: {webData.error}");
             return;
         }
 
